@@ -1,6 +1,6 @@
 watch!
 class Plot
-  attr_reader :data, :points
+  attr_reader :data, :points, :height
   include Processing::Proxy
 
   def initialize(r, g, b, data_source, draw_axis = true)
@@ -12,15 +12,14 @@ class Plot
     @points = []
 
     @width = 600
-    @height = 60
+    @height = 300
     @sample_width = 1
-    @samples_per_second = nil
+    @samples_per_unit = 120
   end
 
   def update
-    update_timing
     # pull next point from data source
-    @data << @ds.get_value
+    @data << @ds.next_value
     max_samples = @width/@sample_width.to_f
     @data = @data.last(max_samples)
 
@@ -32,25 +31,12 @@ class Plot
     end
   end
 
-  def update_timing
-    unless @last_time
-      @last_time = millis
-      return
-    end
-    now = millis
-    d = now - @last_time
-    @last_time = now
-
-    instant_samples_per_second = 1000.0 / d
-  end
-
   def render
     render_axis if @draw_axis
     render_plot
   end
 
   def render_plot
-    stroke_weight(1.2)
     stroke(@r, @g, @b)
     no_fill
 
@@ -66,20 +52,29 @@ class Plot
   end
 
   def render_axis
+    stroke_weight(1)
     axis_length = @points.last[0] # x for last point
 
-    stroke_weight(1)
-
     # bottom stroke
-    stroke(140, 140, 140)
-    line(0, @height, axis_length, @height)
+    stroke(180, 180, 180)
+    line(0, @height, @width, @height)
 
     # middle stroke
-    stroke(160, 160, 160)
-    line(0, @height/2, axis_length, @height/2)
+    stroke(200, 200, 200)
+    line(0, @height/2, @width, @height/2)
 
     # top stroke
-    stroke(140, 140, 140)
-    line(0, 0, axis_length, 0)
+    stroke(180, 180, 180)
+    line(0, 0, @width, 0)
+
+    # vertical
+    stroke(190, 190, 190)
+
+    unit_width = @samples_per_unit * @sample_width
+    num_vertical = (@width / unit_width.to_f).ceil + 1
+    num_vertical.times do |n|
+      x = n * unit_width
+      line(x, 0, x, @height)
+    end
   end
 end

@@ -1,12 +1,13 @@
 require 'pp'
 
+$: << '.'
 require 'lib/ext/reloader'
 app_dir = File.join(File.dirname(__FILE__), 'lib')
 $reloader = Reloader.new(app_dir)
 
 
 class PlotterRunner < Processing::App
-  # load_library :controlP5
+  load_library :control_panel
 
   java_alias :background_int, :background, [Java::int]
   java_alias :fill_int, :fill, [Java::int]
@@ -19,7 +20,8 @@ class PlotterRunner < Processing::App
   end
 
   def setup
-    size(800,800,P3D)
+    size(1200,980,P3D)
+    # no_smooth
     smooth(4)
     background(0, 0, 0)
     load!
@@ -48,9 +50,7 @@ class PlotterRunner < Processing::App
 
   def position_frame
     if @position_frame
-      # frame.add_window_focus_listener {|e| pp e.getID}
-      frame.add_window_listener(java.awt.event.WindowListener.impl {|m,*a| puts m.inspect})
-      frame.set_location 100,100
+      frame.set_location 100,20
       @position_frame = false
     end
   end

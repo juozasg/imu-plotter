@@ -1,14 +1,16 @@
 watch!
 
 class NoiseData
+  attr_accessor :step, :value
   def initialize(seed = nil)
     seed ||= rand(1000)
     @offset = seed
-    @step = 0.03
+    @step = 0.003
+    @value = 0
   end
 
-  def get_value
+  def next_value
     @offset += @step
-    $app.noise(@offset)
+    @value = $app.noise(@offset)
   end
 end
