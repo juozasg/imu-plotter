@@ -1,8 +1,5 @@
 require 'lib/label.rb'
-require 'lib/plot.rb'
-require 'lib/vector_widget.rb'
-require 'lib/widget_3d.rb'
-require 'lib/noise_data.rb'
+require 'lib/instrument_display.rb'
 watch!
 
 class Plotter
@@ -77,30 +74,6 @@ class Plotter
       :object_height => 15
     })
     @widgets << accel_side
-
-    accel_3d = Widget3D.new({
-      :colors => colors,
-      :datas => datas,
-      :object_width => 30,
-      :object_height => 15,
-      :object_length => 60,
-    })
-    @widgets << accel_3d
-  end
-
-  def colors
-    # ["f0027f", "7fc97f", "beaed4",
-    # "e7298a", "1b9e77", "7570b3",
-    # "f781bf", "4daf4a", "984ea3"]
-    [[240, 2, 127], # A-X
-    [127, 201, 127], # A-Y
-    [190, 174, 212], # A-Z
-    [231, 41, 138], # G-X
-    [27, 158, 119], # G-Y
-    [117, 112, 179], # G-Z
-    [247, 129, 191], # M-X
-    [77, 175, 74], # M-Y
-    [152, 78, 163]] # M-Z
   end
 
   def update
