@@ -1,3 +1,4 @@
+require 'lib/noise_data.rb'
 watch!
 
 class Sampler

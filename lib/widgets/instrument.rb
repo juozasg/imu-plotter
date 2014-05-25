@@ -1,7 +1,6 @@
-require 'lib/label.rb'
-require 'lib/plot.rb'
-require 'lib/vector_widget.rb'
-require 'lib/noise_data.rb'
+require 'lib/widgets/axis.rb'
+require 'lib/widgets/graph.rb'
+require 'lib/widgets/label.rb'
 
 watch!
 
@@ -10,6 +9,7 @@ class Instrument < Widget
 
   def initialize(channels, name)
     puts "new #{self.class}     [#{self.object_id}]"
+    @labels = @graphs = @widgets = []
 
     @x = channels[0]
     @y = channels[1]
@@ -17,38 +17,42 @@ class Instrument < Widget
 
     @name = name
 
-    super
     # @f = create_font("Courier New Bold", 16, true)
+    @axis = Axis.new
+    @axis.move(0, 14)
+
+    @graphs << Graph.new(@x)
+    @graphs << Graph.new(@y)
+    @graphs << Graph.new(@z)
+    @graphs.each {|g| g.move(0,14)}
+
+    @title_label = Label.new(name)
+    @title_label.move(0, 0)
   end
 
   def update_plot_labels
     #text = "#{axis}=%.8f" % datas[0 + n].value
   end
 
-  def render_axis
-    stroke_weight(1)
-    axis_length = @points.last[0] # x for last point
+  def update
+    update_labels
+    @graphs.each {|g| g.update}
+  end
 
-    # bottom stroke
-    stroke(180, 180, 180)
-    line(0, @height, @width, @height)
+  def update_labels
+  end
 
-    # middle stroke
-    stroke(200, 200, 200)
-    line(0, @height/2, @width, @height/2)
 
-    # top stroke
-    stroke(180, 180, 180)
-    line(0, 0, @width, 0)
-
-    # vertical
-    stroke(190, 190, 190)
-
-    unit_width = @samples_per_unit * @sample_width
-    num_vertical = (@width / unit_width.to_f).ceil + 1
-    num_vertical.times do |n|
-      x = n * unit_width
-      line(x, 0, x, @height)
+  def draw
+    local_space do
+      @axis.draw
+      @title_label.draw
+      @graphs.each {|g| g.draw}
+      # @labels.each {|l| l.draw}
+      # @widgets.each {|w| w.draw}
     end
   end
+
+
+
 end

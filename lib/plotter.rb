@@ -1,7 +1,7 @@
+require 'lib/channel.rb'
 require 'lib/sampler.rb'
-require 'lib/label.rb'
-require 'lib/widget.rb'
-require 'lib/instrument.rb'
+require 'lib/widgets/widget.rb'
+require 'lib/widgets/instrument.rb'
 watch!
 
 class Plotter
@@ -19,7 +19,7 @@ class Plotter
 
     # %w(Acceleration Gyroscope Magnetometer)
     @instruments = []
-    @instruments << Instrument.new(@samples.channels[0,3], 'Acceleration')
+    @instruments << Instrument.new(@sampler.channels[0,3], 'Acceleration')
 
     @instruments[0].move(16, 12)
   end
@@ -62,6 +62,7 @@ class Plotter
   # end
 
   def update
+    @sampler.sample
     @instruments.each {|i| i.update}
   end
 
@@ -70,12 +71,6 @@ class Plotter
     @instruments.each do |i|
       i.draw
     end
-  end
-
-  def transform_plot(n)
-    row = (n/3.0).floor
-    offy = 20 + (320 * row)
-    translate(20, offy)
   end
 
 

@@ -6,7 +6,6 @@ class NoiseData
     seed ||= rand(1000)
     @offset = seed
     @step = 0.003
-    @value = 0
   end
 
   def next_value

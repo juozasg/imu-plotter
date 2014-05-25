@@ -2,14 +2,9 @@ watch!
 
 class Widget
   include Processing::Proxy
-  attr_accessor :x, :y, :children
+  attr_accessor :x, :y
   def initialize
     @x = @y = 0
-    @children = []
-  end
-
-  def add_child(c)
-    children << c
   end
 
   def move(x,y)
@@ -17,11 +12,18 @@ class Widget
     @y = y
   end
 
-  def draw
+  def push_widget
     push_matrix
     translate(x, y)
-    children.each {|c| c.draw}
-    render # implementation that calls API calls to draw primitives
+  end
+
+  def pop_widget
     pop_matrix
+  end
+
+  def local_space
+    push_widget
+    yield
+    pop_widget
   end
 end
