@@ -22,11 +22,7 @@ class Instrument < Widget
   end
 
   def update_plot_labels
-    %w(X Y Z).each_with_index do |axis, n|
-      @plot_labels[1 + n].text = "#{axis}=%.8f" % datas[0 + n].value
-      @plot_labels[5 + n].text = "#{axis}=%.8f" % datas[3 + n].value
-      @plot_labels[9 + n].text = "#{axis}=%.8f" % datas[6 + n].value
-    end
+    #text = "#{axis}=%.8f" % datas[0 + n].value
   end
 
   def render_axis
