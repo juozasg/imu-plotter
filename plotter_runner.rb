@@ -31,7 +31,7 @@ class PlotterRunner < Processing::App
     handle_reloading
     position_frame
     @plotter.update
-    @plotter.render
+    @plotter.draw
     @first_frame_time ||= millis
   end
 

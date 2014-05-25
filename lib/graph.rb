@@ -1,7 +1,6 @@
 watch!
-class Plot
+class Graph < Widget
   attr_reader :data, :points, :height
-  include Processing::Proxy
 
   def initialize(r, g, b, data_source, draw_axis = true)
     @r, @g, @b = r, g, b

@@ -1,6 +1,8 @@
 watch!
 
 class Sampler
+  attr_reader :channels
+
   def initialize
     puts "new #{self.class}     [#{self.object_id}]"
     @channels = []

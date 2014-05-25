@@ -1,11 +1,10 @@
 watch!
 
-class Label
-  include Processing::Proxy
+class Label < Widget
 
   attr_accessor :text
 
-  def initialize(x, y, color, text)
+  def initialize(color, text)
     puts "new #{self.class}     [#{self.object_id}]"
     @size = 16
     @x, @y, @color, @text = x, y, color, text

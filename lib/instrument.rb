@@ -1,27 +1,32 @@
 require 'lib/label.rb'
 require 'lib/plot.rb'
 require 'lib/vector_widget.rb'
-require 'lib/widget_3d.rb'
 require 'lib/noise_data.rb'
 
 watch!
 
-class InstrumentDisplay
-  include Processing::Proxy
+class Instrument < Widget
+  attr_reader :x, :y, :z, :name
 
-  attr_reader :x, :y, :z
-
-  def initialize(channels)
+  def initialize(channels, name)
     puts "new #{self.class}     [#{self.object_id}]"
 
     @x = channels[0]
     @y = channels[1]
     @z = channels[2]
 
-    build_plots
-    build_plot_labels
-    build_widgets
-    @f = create_font("Courier New Bold", 16, true)
+    @name = name
+
+    super
+    # @f = create_font("Courier New Bold", 16, true)
+  end
+
+  def update_plot_labels
+    %w(X Y Z).each_with_index do |axis, n|
+      @plot_labels[1 + n].text = "#{axis}=%.8f" % datas[0 + n].value
+      @plot_labels[5 + n].text = "#{axis}=%.8f" % datas[3 + n].value
+      @plot_labels[9 + n].text = "#{axis}=%.8f" % datas[6 + n].value
+    end
   end
 
   def render_axis
