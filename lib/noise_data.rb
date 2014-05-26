@@ -10,6 +10,6 @@ class NoiseData
 
   def next_value
     @offset += @step
-    @value = $app.noise(@offset)
+    @value = $app.noise(@offset) - 0.5
   end
 end

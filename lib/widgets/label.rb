@@ -20,7 +20,7 @@ class Label < Widget
       rect_mode(CORNER)
       text_align(LEFT, CENTER)
 
-      $app.text(@text, @x, @y)
+      $app.text(@text, 0, 0)
     end
   end
 end

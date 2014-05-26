@@ -12,7 +12,7 @@ class Graph < Widget
 
   def update
     # pull next point from data source
-    sample = @channel.value
+    sample = 0.5 - @channel.value
     @data << sample * @height
     @data.shift if @data.count > @width
     # @data = @data.last(@width)

@@ -20,7 +20,6 @@ class Plotter
     # %w(Acceleration Gyroscope Magnetometer)
     @instruments = []
     @instruments << Instrument.new(@sampler.channels[0,3], 'Acceleration')
-
     @instruments[0].move(16, 12)
   end
 
