@@ -1,14 +1,12 @@
-require 'hashie/mash'
-
 require 'lib/widgets/axis.rb'
 require 'lib/widgets/graph.rb'
 require 'lib/widgets/label.rb'
+require 'lib/widgets/vector.rb'
 
 watch!
 
 class Instrument < Widget
-  include Hashie
-  attr_reader :channels, :name, :graphs, :labels
+  attr_reader :channels, :name, :graphs, :labels, :widgets
 
   def initialize(channels, name)
     puts "new #{self.class}     [#{self.object_id}]"
@@ -17,8 +15,6 @@ class Instrument < Widget
     @channels.x = channels[0]
     @channels.y = channels[1]
     @channels.z = channels[2]
-
-    pp channels
 
     @name = name
 
@@ -48,6 +44,11 @@ class Instrument < Widget
     labels.z = Label.new("z=")
     labels.z.color = @channels.z.color
     labels.z.move(400, 320)
+
+    @widgets = Mash.new
+
+    @widgets.x = Vector.new(@channels.x, "Accel-X")
+    @widgets.x.move(700, 14)
   end
 
 
@@ -66,9 +67,10 @@ class Instrument < Widget
 
   def draw
     local_space do
-      @axis.draw
-      @labels.values.map(&:draw)
-      @graphs.values.map(&:draw)
+      # @axis.draw
+      # @labels.values.map(&:draw)
+      # @graphs.values.map(&:draw)
+      @widgets.values.map(&:draw)
     end
   end
 

@@ -18,6 +18,12 @@ class PlotterRunner < Processing::App
     @error = nil
   end
 
+  def print_error
+    puts "--------------"
+    puts $!.inspect
+    puts $!.backtrace.join("\n")
+  end
+
   def setup
     size(1200,980,P3D)
     # no_smooth
@@ -27,15 +33,14 @@ class PlotterRunner < Processing::App
   end
 
   def draw
-    clear()
+    clear
 
     position_frame
     handle_loading
     loaded? ? draw_app : draw_error
   rescue
-    puts "failed to draw #{$!.inspect}. waiting 10"
-    puts $!.backtrace.join("\n")
     @error = $!
+    print_error
     @loaded = false
     begin_load_cooldown
   end
@@ -52,9 +57,22 @@ class PlotterRunner < Processing::App
       text = "error\n-----\n" + @error.inspect + "\n" + @error.backtrace.join("\n")
       text += "\n\n" + (@load_cooldown - millis()).to_s if @load_cooldown
     end
+    restore_matrix
     fill(200,200,200)
     text_font(@font)
+    text_align(LEFT, LEFT)
     text(text, 30, 30)
+  end
+
+
+  def restore_matrix
+    # while $matrix_stack > 0
+    #   $app.pop_matrix
+    #   $matrix_stack -= 1
+    # end
+    m = [1.0, 0.0, 0.0, -600.0, 0.0, 1.0, 0.0, -490.0, 0.0, 0.0, 1.0, -848.7049, 0.0, 0.0, 0.0, 1.0]
+    reset_matrix
+    apply_matrix(*m)
   end
 
 
@@ -97,9 +115,8 @@ class PlotterRunner < Processing::App
     @load_cooldown = false
   rescue
     @loaded = false
-    puts "failed to reload #{$!.inspect}. waiting 10"
-    puts $!.backtrace.join("\n")
     @error = $!
+    print_error
     begin_load_cooldown
   end
 
