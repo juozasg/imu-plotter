@@ -16,18 +16,6 @@ class Widget
     @y = y
   end
 
-  # def push_matrix
-  #   puts "push"
-  #   $matrix_stack += 1
-  #   $app.push_matrix
-  # end
-
-  # def pop_matrix
-  #   puts "pop"
-  #   $app.pop_matrix
-  #   $matrix_stack -=1
-  # end
-
   def push_widget
     push_matrix
     translate(x, y)

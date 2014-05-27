@@ -1,92 +1,79 @@
 watch!
 
 class Vector < Widget
-  include Processing::Proxy
+  attr_reader :channels, :labels, :width, :height, :scale
+  def initialize(chan_x, chan_y, name, object_width, object_height)
+    @width = 135
+    @height = 135
+    @scale = 140
 
-  attr_reader :labels
-  def initialize(channel, name)
+    @object_width = object_width
+    @object_height = object_height
+
     @channels = Mash.new
-    @channel = channel
-    @width = 140
-    @height = 140
+    channels.x = chan_x
+    channels.y = chan_y
 
     @labels = Mash.new
     labels.title = Label.new(name)
-    labels.title.move(@width/2, 0)
-    labels.title.rect_mode = CENTER
     labels.title.align_x = CENTER
-    labels.title.align_y = CENTER
+    labels.title.align_y = BOTTOM
+    labels.title.move(width/2, 0)
 
-    labels.value = Label.new("")
-    labels.title.move(@width/2, @height)
+    labels.x = Label.new("x=0.777", 14)
+    labels.x.color = channels.x.color
+    labels.x.align_x = LEFT
+    labels.x.align_y = TOP
+    labels.x.move(0, 0)
+
+    labels.y = Label.new("y=0.666", 14)
+    labels.y.color = channels.y.color
+    labels.y.align_x = RIGHT
+    labels.y.align_y = BOTTOM
+    labels.y.move(width, height)
+  end
+
+  def update
+    labels.x.text = "x=%+.5f" % @channels.x.value
+    labels.y.text = "z=%+.5f" % @channels.y.value
   end
 
   def draw
     local_space do
-      labels.values.map(&:draw)
-      # move coordinate system so that center of widget is 0,0
-      push_matrix
-      translate(@width/2, @height/2)
-
-      stroke_width(2)
-      stroke(@channel.color)
-      line(-60,0,60,0) # rotating line
-      pop_matrix
+      @labels.values.map &:draw
+      no_fill
+      stroke(200,200,200)
+      rect(0,0,width,height)
+      draw_object
+      draw_vector
     end
   end
 
-  def render_border
-    rect_mode(CENTER)
+  def draw_vector
+    push_matrix
+      translate(width/2, height/2)
+      vx = channels.x.value * scale
+      vy = channels.y.value * scale * -1
+      stroke(*channels.x.color)
+      line(0,0,vx,0) # horizontal
 
-    no_fill
-    stroke_width(1)
-    stroke(190, 190, 190)
-    rect(0,0,@width,@height)
+      stroke(*channels.y.color)
+      line(vx,0,vx,vy) # vertical
+
+      stroke(0,0,0) # combined
+      line(0,0,vx,vy)
+    pop_matrix
   end
 
-  def render_label
-    rect_mode(CENTER)
-    text_align(CENTER, CENTER)
+  def draw_object
+    push_matrix
+      translate(width/2, height/2)
+      rect_mode(CENTER)
+      no_stroke
+      fill(255,255,255)
+      rect(0, 0, @object_width, @object_height)
 
-    text_font(@f)
-    fill(120,120,120)
-    text(@label, 0, 6-(@height/2))
-
-    x = "%.4f" % @data_x.value
-    y = "%.4f" % @data_y.value
-
-    rect_mode(CORNER)
-    text_align(LEFT, CENTER)
-
-    fill(*@color_x)
-    text("#{x}", 4-(@width/2), (@height/2) + 8)
-
-    fill(*@color_y)
-    text("#{y}", 8, (@height/2) + 8)
+      rect_mode(CORNER)
+    pop_matrix
   end
-
-  # represents the IMU object
-  def render_object
-    stroke(256, 200, 130)
-    fill(255, 255, 255)
-
-    rect_mode(CENTER)
-    rect(0, 0, @object_width, @object_height)
-  end
-
-  def render_vector
-    x = (@data_x.value - 0.5) * @width
-    y = (@data_y.value - 0.5) * @height
-    cx = @color_x
-    cy = @color_y
-    stroke_width(3)
-    stroke(*cx)
-    line(0,0,x,0) # horizontal
-    stroke(*cy)
-    line(x,0,x,y) # vertical
-
-    stroke(0,0,0) # combined
-    line(0,0,x,y)
-  end
-
 end

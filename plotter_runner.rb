@@ -25,7 +25,7 @@ class PlotterRunner < Processing::App
   end
 
   def setup
-    size(1200,980,P3D)
+    size(1200,1010,P3D)
     # no_smooth
     smooth(4)
     background(0, 0, 0)
@@ -55,9 +55,9 @@ class PlotterRunner < Processing::App
     text = "Mystery error"
     if @error
       text = "error\n-----\n" + @error.inspect + "\n" + @error.backtrace.join("\n")
-      text += "\n\n" + (@load_cooldown - millis()).to_s if @load_cooldown
+      text += "\n\nreload in: " + (@load_cooldown - millis()).to_s if @load_cooldown
     end
-    restore_matrix
+    # restore_matrix
     fill(200,200,200)
     text_font(@font)
     text_align(LEFT, LEFT)
@@ -65,15 +65,11 @@ class PlotterRunner < Processing::App
   end
 
 
-  def restore_matrix
-    # while $matrix_stack > 0
-    #   $app.pop_matrix
-    #   $matrix_stack -= 1
-    # end
-    m = [1.0, 0.0, 0.0, -600.0, 0.0, 1.0, 0.0, -490.0, 0.0, 0.0, 1.0, -848.7049, 0.0, 0.0, 0.0, 1.0]
-    reset_matrix
-    apply_matrix(*m)
-  end
+  # def restore_matrix
+  #   m = [1.0, 0.0, 0.0, -600.0, 0.0, 1.0, 0.0, -490.0, 0.0, 0.0, 1.0, -848.7049, 0.0, 0.0, 0.0, 1.0]
+  #   reset_matrix
+  #   apply_matrix(*m)
+  # end
 
 
   def handle_loading

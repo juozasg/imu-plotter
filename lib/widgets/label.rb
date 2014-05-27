@@ -4,8 +4,8 @@ class Label < Widget
 
   attr_accessor :text, :color, :rect_mode, :align_x, :align_y
 
-  def initialize(text)
-    @size = 16
+  def initialize(text, size = 16)
+    @size = size
     @color = [0,0,0]
     @text = text
     super()

@@ -4,10 +4,11 @@ class Channel
   attr_accessor :value
   attr_reader :color, :name
 
-  def initialize(name, color_index)
+  def initialize(name, color_index, scale = 1.0)
     @value = 0.0
     @color = Channel.colors[color_index]
     @name = name
+    @scale = scale
   end
 
   def self.colors

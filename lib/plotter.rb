@@ -11,16 +11,20 @@ class Plotter
   def initialize
     puts "new #{self.class}     [#{self.object_id}]"
     @sampler = Sampler.new
-    names = %w(x y z)
-    3.times do |i|
+    names = %w(Accel-X Accel-Y Accel-Z Pitch Yaw Roll Mag-X Mag-Y Mag-Z)
+    9.times do |i|
       channel = Channel.new(names[i], i)
       @sampler.add_channel(channel)
     end
 
     # %w(Acceleration Gyroscope Magnetometer)
     @instruments = []
-    @instruments << Instrument.new(@sampler.channels[0,3], 'Acceleration')
+    @instruments << Instrument.new(@sampler.channels[0,3], 'Acceleration', :vector)
+    @instruments << Instrument.new(@sampler.channels[3,3], 'Gyroscope', :rotator)
+    @instruments << Instrument.new(@sampler.channels[5,3], 'Magnetometer', :vector)
     @instruments[0].move(16, 12)
+    @instruments[1].move(16, 345)
+    @instruments[2].move(16, 680)
   end
 
 
